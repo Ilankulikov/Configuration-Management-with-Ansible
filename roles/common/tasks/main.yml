@@ -1,0 +1,39 @@
+# This playbook responsible to install all the necessary packages 
+# and cloning the git repository of the Node Weight Tracker application
+# and installing the pm2 to run the application as a service
+---
+
+  - name: "Install nodejs"
+    apt:
+      update_cache: yes
+      name: nodejs
+      state: present
+
+  - name: "update nodejs package"
+    shell: curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+
+  - name: "upgrade all apt packages"
+    apt: upgrade=dist force_apt_get=yes
+
+  - name: "Clone a github repository"
+    git:
+       repo: https://github.com/{{ account }}/{{ repo }}
+       dest: '{{ homeDir }}/{{ appDir }}'
+       clone: yes
+       update: yes
+    register: git_finished
+
+  - name: "Running NPM install"
+    shell: npm install
+    args:
+      chdir: '{{ homeDir }}/{{ appDir }}'
+    when: git_finished.changed
+    register: npminstall_finished
+
+  - name: Install PM2
+    npm:
+      name: pm2
+      global: yes
+      state: present
+    when: npminstall_finished.changed
+

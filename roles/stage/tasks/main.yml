@@ -1,0 +1,37 @@
+#
+---
+  - name: "Template a file"
+    ansible.builtin.template:
+      src: './.env'
+      dest: '{{ homeDir  }}/{{ appDir }}'
+      owner: '{{ user }}'
+      mode: u=r,g=r,o=r
+    register: setenv_finished
+
+  - name: "Running NPM initdb"
+    shell: npm run initdb
+    args:
+      chdir: '{{ homeDir }}/{{ appDir }}'
+    when: setenv_finished.changed
+    run_once: true
+
+  - name: Start APP
+    shell: pm2 start npm -- run dev
+    args:
+      chdir: '{{ homeDir }}/{{ appDir }}'
+    when: setenv_finished.changed
+    register: start_finished
+
+  - name: Save PM2 configuration
+    shell: pm2 save
+    args:
+      chdir: '{{ homeDir }}/{{ appDir }}'
+    when: start_finished.changed
+    register: save_finished
+
+  - name: Create PM2 startup script
+    shell: pm2 startup
+    args:
+      chdir: '{{ homeDir }}/{{ appDir }}'
+    when: save_finished.changed
+
