@@ -1,0 +1,10 @@
+# The vatiables of production environment
+
+PGHOST: # postgres host name
+PGUSERNAME: # postgres username
+PGDBNAME: # postgres database name
+PGPASS: # postgres password
+OKTAURL: # Okta Url
+OKTACLIENT: # Okta client id
+OKTASECRET: # okta client secret
+HOSTIP: # Host IP
