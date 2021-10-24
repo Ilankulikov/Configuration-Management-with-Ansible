@@ -1,0 +1,16 @@
+[staging]
+(node_ip)
+
+
+[production]
+(node_ip)
+
+
+
+[webservers:children]
+staging
+production
+
+[webservers:vars]
+ansible_python_interpreter=/usr/bin/python3
+
