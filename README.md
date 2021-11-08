@@ -1,5 +1,5 @@
-# Week_6_Ansible
-## Configuration Management with Ansible
+## Week 6 Project
+# Configuration Management with Ansible
 
 __Deploy and configure the Node Weight Tracker application for several virtual machines using Ansible.__
 
